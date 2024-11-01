@@ -8,25 +8,15 @@ import numpy as np
 
 from models.anime_gan import GeneratorV1
 from models.anime_gan_v2 import GeneratorV2
-from models.anime_gan_v3 import GeneratorV3
 from utils.common import load_checkpoint, RELEASED_WEIGHTS
 from utils.image_processing import resize_image, normalize_input, denormalize_input
 from utils import read_image, is_image_file, is_video_file
 from tqdm import tqdm
 from color_transfer import color_transfer_pytorch
 
-
-try:
-    import matplotlib.pyplot as plt
-except ImportError:
-    plt = None
-
-try:
-    import moviepy.video.io.ffmpeg_writer as ffmpeg_writer
-    from moviepy.video.io.VideoFileClip import VideoFileClip
-except ImportError:
-    ffmpeg_writer = None
-    VideoFileClip = None
+import matplotlib.pyplot as plt
+from moviepy.video.io.ffmpeg_writer import ffmpeg_writer
+from moviepy.video.io.VideoFileClip import VideoClipFile
 
 
 def profile(func):
@@ -44,12 +34,11 @@ def auto_load_weight(weight, version=None, map_location=None):
     weight_name = os.path.basename(weight).lower()
     if version is not None:
         version = version.lower()
-        assert version in {"v1", "v2", "v3"}, f"Version {version} does not exist"
+        assert version in {"v1", "v2"}, f"Version {version} does not exist"
         # If version is provided, use it.
         cls = {
             "v1": GeneratorV1,
-            "v2": GeneratorV2,
-            "v3": GeneratorV3
+            "v2": GeneratorV2
         }[version]
     else:
         # Try to get class by name of weight file    
@@ -61,8 +50,6 @@ def auto_load_weight(weight, version=None, map_location=None):
 
         elif weight_name.startswith("generatorv2"):
             cls = GeneratorV2
-        elif weight_name.startswith("generatorv3"):
-            cls = GeneratorV3
         elif weight_name.startswith("generator"):
             cls = GeneratorV1
         else:
