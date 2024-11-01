@@ -15,8 +15,8 @@ from tqdm import tqdm
 from color_transfer import color_transfer_pytorch
 
 import matplotlib.pyplot as plt
-from moviepy.video.io.ffmpeg_writer import ffmpeg_writer
-from moviepy.video.io.VideoFileClip import VideoClipFile
+#from moviepy.video.io.ffmpeg_writer import FFMPEG_VideoWriter
+#from moviepy.video.io.VideoFileClip import VideoClipFile
 
 
 def profile(func):
